@@ -15,7 +15,12 @@ class DDQNAgent:
         self._target_critic = critic().to('cuda')
 
         self._loss = nn.MSELoss()
-        self._optimizer = optim.Adam(self._actor.parameters(), config_dict['lr'], betas=config_dict['betas'])
+        self._actor_optimizer = optim.Adam(
+            self._actor.parameters(), config_dict['actor_lr'],
+            betas=config_dict['betas'], weight_decay=config_dict['actor_l2'])
+        self._critic_optimizer = optim.Adam(
+            self._critic.parameters(), config_dict['critic_lr'],
+            betas=config_dict['betas'], weight_decay=config_dict['critic_l2'])
 
         self.sync_network()
         self._target_actor.eval()
@@ -30,15 +35,22 @@ class DDQNAgent:
         return loss
 
     def _optimize(self, loss):
-        self._optimizer.zero_grad()
+        self._actor_optimizer.zero_grad()
+        self._critic_optimizer.zero_grad()
         loss.backward()
 
+        """
         if self._config_dict['gradient_clip']:
             for actor_var, critic_var in zip(self._actor.parameters(), self._critic.parameters()):
                 torch.clamp_(actor_var.grad.data, -self._config_dict['clip_value'], self._config_dict['clip_value'])
                 torch.clamp_(critic_var.grad.data, -self._config_dict['clip_value'], self._config_dict['clip_value'])
+        """
 
-        self._optimizer.step()
+        self._actor_optimizer.step()
+        self._critic_optimizer.step()
+
+    def append_memory(self, state, action, reward, next_state, done):
+        self._replay_memory.append(state, action, reward, next_state, done)
 
     def sync_network(self):
         self._target_actor.load_state_dict(self._actor.state_dict())
@@ -66,7 +78,7 @@ class DDQNAgent:
         self._optimize(loss)
         return loss
 
-    def save_seights(self, path):
+    def save_weights(self, path):
         torch.save(self._actor.state_dict(), path + 'actor.weights')
         torch.save(self._critic.state_dict(), path + 'critic.weights')
 
