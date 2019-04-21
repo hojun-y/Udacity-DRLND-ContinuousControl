@@ -16,7 +16,6 @@ brain_name = env.brain_names[0]
 brain = env.brains[brain_name]
 
 episodes = 0
-noise = 0
 steps = 0
 total_scores = deque(maxlen=100)
 scores = []
@@ -35,8 +34,7 @@ while train_flag:
             if steps < config['train_start']:
                 action = np.random.uniform(config['action_low'], config['action_high'], 4)
             else:
-                action = agent.get_action(state, noise)
-                action = action.cpu().numpy()
+                action = agent.get_action(state)
             env_info = env.step(action)[brain_name]
             next_observation = env_info.vector_observations[0]
             reward = env_info.rewards[0]

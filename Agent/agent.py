@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import Agent.memory_utils as memutils
+import numpy as np
 from Agent.batch2tensor import batch2tensor
 
 
@@ -64,11 +65,13 @@ class DDQNAgent:
         update(self._actor.parameters(), self._target_actor.parameters())
         update(self._critic.parameters(), self._target_critic.parameters())
 
-    def get_action(self, state, noise=0):
+    def get_action(self, state):
         with torch.no_grad():
             self._actor.eval()
-            action = self._actor.forward(torch.Tensor([state]).cuda()).to('cuda')
-            add_noise = action  # TODO: Add UG noise
+            action = self._actor.forward(torch.Tensor([state]).cuda())
+            action = action.cpu().numpy()
+            add_noise = action + np.random.normal(0, self._config_dict['noise_size'], 4)
+
             return add_noise
 
     def train(self):

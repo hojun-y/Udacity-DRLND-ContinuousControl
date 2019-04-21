@@ -1,8 +1,8 @@
 config = dict()
-config['actor_lr'] = 5e-3
-config['critic_lr'] = 3e-3
+config['actor_lr'] = 3e-3
+config['critic_lr'] = 1e-3
 config['actor_l2'] = 5e-3
-config['critic_l2'] = 1e-2
+config['critic_l2'] = 1e-3
 config['batch_size'] = 64
 config['betas'] = [0.9, 0.999]  # [beta1, beta2]
 
@@ -11,6 +11,7 @@ config['history_len'] = 1
 config['train_start'] = 10 ** 4
 config['discount_factor'] = 0.99
 config['tau'] = 1e-3
+config['noise_size'] = 0.2
 
 config['action_low'] = -1
 config['action_high'] = 1
