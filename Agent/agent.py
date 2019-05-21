@@ -15,7 +15,7 @@ class DDQNAgent:
         self._critic = critic().to('cuda')
         self._target_critic = critic().to('cuda')
 
-        self._loss = nn.MSELoss()
+        self._critic_mse = nn.MSELoss()
         self._actor_optimizer = optim.Adam(
             self._actor.parameters(), config_dict['actor_lr'],
             betas=config_dict['betas'], weight_decay=config_dict['actor_l2'])
@@ -32,23 +32,25 @@ class DDQNAgent:
         target_q = self._target_critic(next_state, target_action)
         q_value = self._critic(state, action)
         target_y = reward + (self._config_dict['discount_factor'] * target_q)
-        loss = self._loss(q_value, target_y)
-        return loss
+        _critic_loss = self._critic_mse(q_value, target_y)
+        _actor_loss = -torch.mean(self._critic(state, self._actor(state)))
+
+        return [_actor_loss, _critic_loss]
 
     def _optimize(self, loss):
+        actor_loss, critic_loss = loss
         self._actor_optimizer.zero_grad()
+        actor_loss.backward()
+        self._actor_optimizer.step()
         self._critic_optimizer.zero_grad()
-        loss.backward()
-
+        critic_loss.backward()
+        self._critic_optimizer.step()
         """
         if self._config_dict['gradient_clip']:
             for actor_var, critic_var in zip(self._actor.parameters(), self._critic.parameters()):
                 torch.clamp_(actor_var.grad.data, -self._config_dict['clip_value'], self._config_dict['clip_value'])
                 torch.clamp_(critic_var.grad.data, -self._config_dict['clip_value'], self._config_dict['clip_value'])
         """
-
-        self._actor_optimizer.step()
-        self._critic_optimizer.step()
 
     def append_memory(self, state, action, reward, next_state, done):
         self._replay_memory.append(state, action, reward, next_state, done)
@@ -71,7 +73,7 @@ class DDQNAgent:
             action = self._actor.forward(torch.Tensor([state]).cuda())
             action = action.cpu().numpy()
             add_noise = action + np.random.normal(0, self._config_dict['noise_size'], 4)
-
+            self._actor.train()
             return add_noise
 
     def train(self):

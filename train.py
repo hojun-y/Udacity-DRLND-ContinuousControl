@@ -66,7 +66,7 @@ while train_flag:
                   "\tStep: {}".format(steps),
                   "\tScore: {:.4f}".format(total_score), end="")
             if loss is not None:
-                print("\tLoss: {:.4f}".format(loss))
+                print("\tActor Loss: {:.4f}\tCritic Loss: {:.8f}".format(loss[0], loss[1]))
             else:
                 print("\t[RANDOM ACTION]")
 
