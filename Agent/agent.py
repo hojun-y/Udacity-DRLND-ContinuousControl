@@ -27,7 +27,7 @@ class DDQNAgent:
         self._target_actor.eval()
         self._target_critic.eval()
 
-    def _get_loss(self, state, action, reward, next_state, done):
+    def _get_loss(self, state, action, reward, next_state):
         target_action = self._target_actor(next_state)
         target_q = self._target_critic(next_state, target_action)
         q_value = self._critic(state, action)
@@ -45,12 +45,6 @@ class DDQNAgent:
         self._critic_optimizer.zero_grad()
         critic_loss.backward()
         self._critic_optimizer.step()
-        """
-        if self._config_dict['gradient_clip']:
-            for actor_var, critic_var in zip(self._actor.parameters(), self._critic.parameters()):
-                torch.clamp_(actor_var.grad.data, -self._config_dict['clip_value'], self._config_dict['clip_value'])
-                torch.clamp_(critic_var.grad.data, -self._config_dict['clip_value'], self._config_dict['clip_value'])
-        """
 
     def append_memory(self, state, action, reward, next_state, done):
         self._replay_memory.append(state, action, reward, next_state, done)
