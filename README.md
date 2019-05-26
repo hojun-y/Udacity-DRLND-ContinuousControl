@@ -43,7 +43,7 @@ First, you have to download the environment from link below:
 > For Windows(64bit): <a href="https://s3-us-west-1.amazonaws.com/udacity-drlnd/P2/Reacher/one_agent/Reacher_Windows_x86_64.zip">Download</a>
 
 Second, extract the downloaded environment.<br>
-Finally, you should change the environment path in `config.py`'s `env_path`.<br>
+Finally, you should change the `env_path` to environment excutable's path in `config.py` file.<br>
 > e.g. If your environment executable's path is `./path/to/executable/Reacher.exe'`,<br>
 > you can change the `config.py`'s `env_path` to<br>
 > `config['env_path'] = 'path/to/executable/Reacher.exe'`
