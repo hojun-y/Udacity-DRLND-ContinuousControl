@@ -36,17 +36,17 @@ Details of the environment is below:
  For more information about Unity ML-Agents, please visit the
  <a href="https://github.com/Unity-Technologies/ml-agents/blob/master/docs/">official documentation</a>.
 ### 2. Install the Environment
-First, you have to download the environment from link below:
+##### First, you have to download the environment from link below:
 > For Linux: <a href="https://s3-us-west-1.amazonaws.com/udacity-drlnd/P2/Reacher/one_agent/Reacher_Linux.zip">Download</a><br>
 > For Mac OS X: <a href="https://s3-us-west-1.amazonaws.com/udacity-drlnd/P2/Reacher/one_agent/Reacher.app.zip">Download</a><br>
 > For Windows(32bit): <a href="https://s3-us-west-1.amazonaws.com/udacity-drlnd/P2/Reacher/one_agent/Reacher_Windows_x86.zip">Download</a><br>
 > For Windows(64bit): <a href="https://s3-us-west-1.amazonaws.com/udacity-drlnd/P2/Reacher/one_agent/Reacher_Windows_x86_64.zip">Download</a>
 
-Second, extract the downloaded environment.<br>
-Finally, you should change the `env_path` to environment excutable's path in `config.py` file.<br>
-> e.g. If your environment executable's path is `./path/to/executable/Reacher.exe'`,<br>
-> you can change the `config.py`'s `env_path` to<br>
-> `config['env_path'] = 'path/to/executable/Reacher.exe'`
+##### Second, extract the downloaded environment.<br>
+##### Finally, you **should change the `env_path` to environment excutable's path** in `config.py` file.<br>
+ > e.g. If your environment executable's path is `./path/to/executable/Reacher.exe'`,<br>
+ > you can change the `config.py`'s `env_path` to<br>
+ > `config['env_path'] = 'path/to/executable/Reacher.exe'`
 
 ## 3. Train the Agent
 Use `train.py` to train the agent.
